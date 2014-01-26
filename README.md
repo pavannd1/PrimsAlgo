@@ -14,7 +14,7 @@ v2 v3 c2 // the edge (v2, v3) with cost c2
 
 $mst -s file-name // read the input from a file ‘file-name’ for simple scheme
 $mst -f file-name // read the input from a file ‘file-name’ for f-heap scheme
-$mst -r file-name // read the input from a file 'file-name' for binomial heap scheme
+$mst -fr file-name // read the input from a file 'file-name' for binomial heap scheme
 
 2. Using the random graph generator.
 
