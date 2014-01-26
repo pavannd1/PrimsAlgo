@@ -16,7 +16,7 @@ enum selection
 	FIBONACCI = 2,      // Fibonacci heap implementation
 	UI = 3,             // User input mode
 	RAN = 4,            // Random mode
-	FIBO_REMOVE_MIN = 5 // Fibonacci remove min method
+	FIBO_REMOVE_MIN = 5 // Fibonacci remove min method(Binomial Heap)
 };
 
 /* Class Graphs
