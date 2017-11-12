@@ -1,10 +1,13 @@
 #ifndef FIBONACCI_H_
 #define FIBONACCI_H_
+
 #include <iostream>
 #include <cstdlib>
-#include "adjlist.h"
 #include <math.h>
 #include <vector>
+
+#include "adjlist.h"
+
 using namespace std;
 
 class fiboHeap;
