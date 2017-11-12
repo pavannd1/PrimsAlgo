@@ -1,13 +1,15 @@
 #ifndef GRAPHS_H_
 #define GRAPHS_H_
 #include <iostream>
-#include "adjlist.h"
-#include "fibonacci.h"
 #include <vector>
 #include <fstream>
 #include <cstring>
 #include <time.h>
 #include <queue>
+
+#include "adjlist.h"
+#include "fibonacci.h"
+
 using namespace std;
 
 enum selection
