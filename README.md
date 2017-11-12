@@ -3,7 +3,7 @@ Performance evaluation of Prim's algorithm using Binomial heaps, Fibonacci heaps
 
 Implemented Binomial heaps and Fibonacci heaps to compare the performance of Prim's Algorithm to generate the minimum spanning tree along with a simple array implementation. This also has random graph generation and implementation of BFS to confirm connectivity of generated graph. These graphs are stored using Adjacency lists.
 
-To compile the code use "make" or "g++ mst.cpp –o mst".
+To compile the code use "make" or "g++ mst.cc –o mst".
 
 There are two ways of running the code:
 1. Using a text file as input and generating a graph using the text file. The text file needs to have the following format: 
