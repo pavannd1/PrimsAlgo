@@ -1,4 +1,6 @@
+SOURCES: src/mst.cc
+
 mst:
-	g++ mst.cpp -o mst
+	g++ $SOURCES -o mst
 make clean:
 	rm -rf *o mst
