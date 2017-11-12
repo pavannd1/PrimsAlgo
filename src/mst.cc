@@ -1,8 +1,9 @@
 #include <iostream>
-#include "graphs.h"
 #include <time.h>
 #include <sstream>
 #include <cstring>
+
+#include "graphs.h"
 
 using namespace std;
 
