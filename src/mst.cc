@@ -3,7 +3,6 @@
 #include <ctime>
 #include <sstream>
 
-
 #include "graphs.h"
 
 using namespace std;
