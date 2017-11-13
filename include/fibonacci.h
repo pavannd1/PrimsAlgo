@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <cstdlib>
-#include <math.h>
+#include <cmath>
 #include <vector>
 
 #include "adjlist.h"
@@ -12,64 +12,78 @@ using namespace std;
 
 class fiboHeap;
 
-/* fiboNode class defines objects of each node type in a fiboHeap
- * it holds the key which is the cost of an edge along with other basic attributes and the edge itself
+/* 
+ * fiboNode class defines objects of each node type in a fiboHeap.
+ * It holds the key which is the cost of an edge along with other basic attributes and the edge itself.
  */
-class fiboNode
-{
+class fiboNode {
 public:
-	int degree, child_cut, marked, key;
+	int degree;
+	int child_cut;
+	int marked;
+	int key;
 	Neighbor* nbr;
-	fiboNode *child, *parent, *left, *right;
+	fiboNode* child;
+	fiboNode* parent;
+	fiboNode* left;
+	fiboNode* right;
 
-	// default constructor
-	fiboNode()
-	{
-		degree = child_cut = marked = key = 0;
-		nbr = 0;
-		child = parent = left = right = 0;
-	}
+	// Default constructor
+	fiboNode() 
+		: degree(0),
+		  child_cut(0),
+		  marked(0),
+	  	  key(0),
+		  nbr(NULL),
+		  child(NULL),
+		  parent(NULL),
+		  left(NULL),
+		  right(NULL) {}
 
-	// initializes the edge node into the node
+	// Initializes the edge node
 	fiboNode(Neighbor* n)
-	{
-		degree = child_cut = marked = 0;
-		nbr = n;
-		key = nbr->cost;
-		child = parent = left = right = 0;
-	}
+		: degree(0),
+		  child_cut(0),
+		  marked(0),
+	  	  key(n->cost),
+		  nbr(n),
+		  child(NULL),
+		  parent(NULL),
+		  left(NULL),
+		  right(NULL) {}
 	
-	// for initializing edge node and key
+	// Initializes edge node and key
 	fiboNode(Neighbor* n, int k)
-	{
-		degree = child_cut = marked = 0;
-		nbr = n;
-		key = k;
-		child = parent = left = right = 0;
-	}
+	    : degree(0),
+		  child_cut(0),
+		  marked(0),
+	  	  key(k),
+		  nbr(n),
+		  child(NULL),
+		  parent(NULL),
+		  left(NULL),
+		  right(NULL) {}
 
-	~fiboNode() { }
+	~fiboNode() {}
 
-	// compares the cost of two nodes and returns true if if the caller is lesser
-	int min_cost(fiboNode* node)
-	{
-		if(key < node->key) return 1;
+	// Compares the cost of two nodes.
+	// Returns true if the caller is lesser.
+	int min_cost(fiboNode* node) {
+	    if(key < node->key) return 1;
 		return 0;
 	}
 
-	// inserts the passed node as the child node of the caller and returns the parent node
-	fiboNode* insert_child(fiboNode* child_node)
-	{
-		if(child == 0)
-		{
+	// Inserts the passed node as the child node of the caller.
+	// Returns the parent node.
+	fiboNode* insert_child(fiboNode* child_node) {
+		if(child == NULL) {
 			child = child_node;
 			child->parent = this;
-			child->left = child->right = child;
+			child->left = child;
+            child->right = child;
 			degree++;
 			this->child_cut = 0;
-		}
-		else
-		{
+		} else {
 			child_node->right = child->right;
 			child_node->left = child;
 			child_node->right->left = child_node;
@@ -82,49 +96,43 @@ public:
 	}
 };
 
-/* fiboHeap class defines the fibonacci heap
- * it has a min pointer which points to minimum element of the heap
- * it also stores the numNodes for calculation purposes
+/* 
+ * fiboHeap class defines the fibonacci heap.
+ * It has a min pointer which points to minimum element of the heap.
+ * It also stores the numNodes for calculation purposes.
  */
-class fiboHeap
-{
+class fiboHeap {
 public:
-	fiboNode *min;
+	fiboNode* min;
 	int numNodes;
 
-	// default constructor
+	// Default constructor
 	fiboHeap()
-	{
-		min = 0;
-		numNodes = 0;
-	}
+        : min(NULL),
+          numNodes(0) {}
 
-	// continues remove min until all nodes are removed
-	~fiboHeap() 
-	{
+	// Continues remove min until all nodes are removed.
+	~fiboHeap() {
 		fiboNode* temp;
-		while (min != 0)
-		{
+		while (min != NULL) {
 			temp = remove_min();
 			delete temp;
 		}
 	}
 
-	/* To insert a new node into the heap
-	 * @param newNode is the node to be inserted
-	 * each node is inserted to the right of the min element
+	/* To insert a new node into the heap.
+	 * @param: newNode is the node to be inserted.
+	 * Each node is inserted to the right of the min element.
 	 */
-	void insert(fiboNode* newNode)
-	{
-		if (newNode == 0) return;
+	void insert(fiboNode* newNode) {
+		if (newNode == NULL) return;
 
 		// if the heap is empty, the new node becomes the root
-		if (min == 0)
-		{
-			min = newNode->left = newNode->right = newNode;
-		}
-
-		else {
+		if (min == NULL) {
+			min = newNode;
+            newNode->left = newNode;
+            newNode->right = newNode;
+		} else {
 			// inserting the new node between min and min->right
 			newNode->left = min;
 			newNode->right = min->right;
@@ -135,27 +143,27 @@ public:
 		}
 
 		// new node becomes min, if cost is less than min
-		if (newNode->min_cost(min))
-		{
+		if (newNode->min_cost(min)) {
 			min = newNode;
 		}
 
 		// num of nodes increases
 		numNodes++;
-		newNode->parent = 0;
+		newNode->parent = NULL;
 	}
 
-	/* To meld two heaps
-	 * @param newHeap gives the heap which has to be joined to the current one
-	 * the joining happens with the merger of two circular lists at the root level
+	/* To meld two heaps.
+	 * @param: newHeap gives the heap which has to be joined to the current one.
+	 * The joining happens with the merger of two circular lists at the root level.
 	 */
-	void meld(fiboHeap* newHeap)
-	{
-		fiboNode *min1, *min2, *next1, *next2;
-		if (newHeap == 0 || newHeap->min == 0)
-		{
+	void meld(fiboHeap* newHeap) {
+		if (newHeap == NULL || newHeap->min == NULL) {
 			return;
 		}
+        fiboNode* min1;
+        fiboNode* min2;
+        fiboNode* next1;
+        fiboNode* next2;
 
 		// we join the two heaps by cutting between min and its next node
 		min1 = min;
@@ -170,185 +178,155 @@ public:
 		next1->left = min2;
 
 		// updating min
-		if (min2->min_cost(min1))
-		{
+		if (min2->min_cost(min1)) {
 			min = min2;
 		}
 
 		// deleting the other heap
-		newHeap->min = 0;
+		newHeap->min = NULL;
 		delete newHeap;
 	}
 
-	/* returns the min pointer
+	/* Returns the min pointer
 	 */
-	fiboNode* get_min()
-	{
+	inline fiboNode* get_min() {
 		return min;
 	}
 
-	/* Removes all links of a node
-	 * @param node is the node which has to be disconnected from the circular list
+	/* Removes all links of a node.
+	 * @param: node is the node which has to be disconnected from the circular list.
 	 */
-	fiboNode* remove_node(fiboNode* node)
-	{
+	fiboNode* remove_node(fiboNode* node) {
 		node->left->right = node->right;
 		node->right->left = node->left;
-		node->left = node->right = 0;
+		node->left = NULL;
+        node->right = NULL;
 		return node;
 	}
 
-	/* Remove min extracts the minimum element
-	 * returns the min element node
-	 * after the min is removed it does a pairwise combine of all the trees
-	 * where trees of same degrees are combined
+	/* Remove min extracts the minimum element.
+	 * Returns the min element node.
+	 * After the min is removed, it does a pairwise combine of all the trees
+	 * where trees of same degrees are combined.
 	 */
-	fiboNode* remove_min()
-	{
-		fiboNode* result_min;
-		fiboHeap* child_heap = 0;
-
+	fiboNode* remove_min() {
 		if ((result_min = get_min()) == 0) return 0;
+        
+        fiboNode* result_min;
+		fiboHeap* child_heap = NULL;
 
 		// removing the min and setting it to the next node
 		min = result_min->right;
 		result_min->right->left = result_min->left;
 		result_min->left->right = result_min->right;
-		result_min->right = result_min->left = 0;
+		result_min->right = NULL;
+        result_min->left = NULL;
 
 		numNodes--;
 		result_min->degree = 0;
 
-		//we need to attach the child list to the root level list
+		// we need to attach the child list to the root level list
 		// if no child list, nothing to do
-		if (result_min->child == 0)
-		{
-			if (min == result_min)
-			{
-				min = 0;
+		if (result_min->child == NULL) {
+			if (min == result_min) {
+				min = NULL;
 			}
-		}
-
-		// if there was only one node in the root level
-		// then the min will be the child of the resulted min
-		else if (min == result_min)
-		{
+		} else if (min == result_min) {
+            // if there was only one node in the root level
+		    // then the min will be the child of the resulted min
 			min = result_min->child;
-		}
-		
-		// if min was different, the child list has to be merged with root level list
-		// copying it to temp list and then melding with the root list
-		else 
-		{
+		} else {
+            // if min was different, the child list has to be merged with root level list
+		    // copying it to temp list and then melding with the root list
 			child_heap = new fiboHeap();
 			child_heap->min = result_min->child;
 		}
 
 		// remove all pointers to the resulting min
-		if (result_min->child != 0)
-		{
-			result_min->child->parent = 0;
+		if (result_min->child != NULL) {
+			result_min->child->parent = NULL;
 		}
-		result_min->child = result_min->parent = 0;
+		result_min->child = NULL;
+        result_min->parent = NULL;
 
 		// merging the child list with root level list
-		if(child_heap)
-		{
+		if(child_heap) {
 			meld(child_heap);
 		}
 
 		// need to do pairwise combine
-		if (min != 0 && min->right != min)
-		{
+		if (min != NULL && min->right != min) {
 			pairwise_combine();
 		}
 
 		// updating the min after pairwise combine
 		fiboNode* iter = min;
 		do {
-			if (iter->key < min->key)
-			{
+			if (iter->key < min->key) {
 				min = iter;
 			}
 			iter = iter->right;
-		}while (iter != min);
+		} while (iter != min);
 
 		// return the resulting min
 		return result_min;
 	}
 
-	/* Printing the heap
-	 * only for testing purposes
+	/* Printing the heap.
 	 */
-	void print()
-	{
+	void print() {
 		fiboNode* temp = min;
-		if (min == 0)
-		{
-			cout << "Empty heap " << endl;
-		}
-		else {
+		if (min == NULL) {
+			cout << "Empty heap" << endl;
+		} else {
 			cout << "Num nodes: "<< numNodes << endl;
 			cout << "The heap "<< endl;
 			do {
 				cout << temp->key << " ";
 				temp = temp->right;
-			}while (temp != min);
+			} while (temp != min);
 			cout << endl;
 		}
 	}
 
-	/* This combines all the trees of same degree into one tree
-     * degree table is maintained which holds the degrees of trees traversed
+	/* This combines all the trees of same degree into one tree.
+     * Degree table is maintained which holds the degrees of trees traversed.
 	 */
-	void pairwise_combine()
-	{
-		fiboNode *node1, *node2, *iter;
+	void pairwise_combine() {
+		fiboNode* node1;
+        fiboNode* node2;
+        fiboNode* iter;
 
 		// the size is log to base 2 of num of nodes
 		int size = (ceil(log10(numNodes)/log10(1.62)));
-		vector<fiboNode*> degree_table(size);
-		
-		for (int i = 0; i < size; i++)
-		{
-			degree_table.push_back(0);
-		}
+		vector<fiboNode*> degree_table(size, 0);
 
 		// traverse through the root level nodes combining them
 		iter = min;
-		while (iter->marked != 1)
-		{
+		while (iter->marked != 1) {
 			int curr_degree = iter->degree;
 			// if no other node with same degree has been found
-			if (degree_table[curr_degree] == 0)
-			{
+			if (degree_table[curr_degree] == 0) {
 				degree_table[curr_degree] = iter;
 				iter->marked = 1;
-				if (iter->key < min->key)
-				{
+				if (iter->key < min->key) {
 					min = iter;
 				}
 				iter = iter->right;
-			}
-
-			// if there already exists a node with same degree
-			else
-			{
+			} else {
+                // if there already exists a node with same degree
 				iter->marked = 0;
 				node1 = degree_table[curr_degree];
 				node2 = iter;
 
 				// check which of the nodes has min cost and make it the root of the new tree
-				if (node1->min_cost(node2))
-				{
+				if (node1->min_cost(node2)) {
 					node2 = remove_node(node2);
 					iter = node1->insert_child(node2);
 					degree_table[curr_degree] = 0;
 					iter->marked = 0;
 					min = iter;
-				}
-				else
-				{
+				} else {
 					node1 = remove_node(node1);
 					iter = node2->insert_child(node1);
 					degree_table[curr_degree] = 0;
@@ -359,26 +337,22 @@ public:
 		}
 	}
 
-	/* Decreases the key of a node
-	 * does appropriate changes to the heap
-	 * @param node is the node whose key is being decreased
-	 * @param key is the new key to be set
+	/* Decreases the key of a node.
+	 * Does appropriate changes to the heap.
+	 * @param: node is the node whose key is being decreased.
+	 * @param: key is the new key to be set.
 	 */
-	void decrease_key(fiboNode* node, int key)
-	{
-		if (key > node->key)
-		{
-			cout << " Invalid key.. value is greater than current key "<<endl;
+	void decrease_key(fiboNode* node, int key) {
+		if (key > node->key) {
+			cout << "Invalid key.. value is greater than current key"<< endl;
 		}
 		node->key = key;
 		fiboNode* parent = node->parent;
-		if (parent != 0 && node->key < parent->key)
-		{
+		if (parent != NULL && node->key < parent->key) {
 			cut(node, parent);
 			cascading_cut(parent);
 		}
-		if (node->min_cost(min))
-		{
+		if (node->min_cost(min)) {
 			min = node;
 		}
 	}
@@ -388,34 +362,29 @@ public:
 	 * @param node is the child node
 	 * @param parent is the parent node
 	 */
-	void cut(fiboNode* node, fiboNode* parent)
-	{
-		if (parent->child == node)
-		{
+	void cut(fiboNode* node, fiboNode* parent) {
+		if (parent->child == node) {
 			// if node is the only child of the parent
 			// remove it and set child pointer to null
-			if (node->right == node && node->left == node)
-			{
-				parent->child = 0;
-			}
-			// if there are other children then assign pointers appropriately
-			else
-			{
+			if (node->right == node && node->left == node) {
+				parent->child = NULL;
+			} else {
+                // if there are other children then assign pointers appropriately
 				node->left->right = node->right;
 				node->right->left = node->left;
 				parent->child = node->right;
-				node->left = node->right = 0;
+				node->left = NULL;
+                node->right = NULL;
 			}
-		}
-		// if its somewhere in the list, then remove and set pointers appropriately
-		else
-		{
+		} else {
+            // if its somewhere in the list, then remove and set pointers appropriately
 			node->left->right = node->right;
 			node->right->left = node->left;
-			node->left = node->right = 0;
+			node->left = NULL;
+            node->right = NULL;
 		}
 		// set parent pointer null and decrease parent's degree
-		node->parent = 0;
+		node->parent = NULL;
 		parent->degree = parent->degree - 1;
 
 		// add the child to the root list
@@ -429,22 +398,17 @@ public:
 		node->child_cut = 0;
 	}
 
-	/* Does cascading cut recursively
-	 * @param node is a parent of a node whose key was decreased and
-	 * it was moved to the root list
+	/* Does cascading cut recursively.
+	 * @param: node is a parent of a node whose key was decreased and
+	 * it was moved to the root list.
 	 */
-	void cascading_cut(fiboNode* node)
-	{
+	void cascading_cut(fiboNode* node) {
 		fiboNode* parent = node->parent;
-		if (parent != 0)
-		{
-			if (!node->child_cut)
-			{
+		if (parent != NULL) {
+			if (!node->child_cut) {
 				node->child_cut = 1;
 				return;
-			}
-			else
-			{
+			} else {
 				cut(node,parent);
 				cascading_cut(parent);
 			}
