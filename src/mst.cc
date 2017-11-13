@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
 		clock_t start_simple;
         clock_t time_simple;
         clock_t start_fibo;
-        clock_t time_fibo;
+       	clock_t time_fibo;
         clock_t start_bino;
         clock_t time_bino;
 
