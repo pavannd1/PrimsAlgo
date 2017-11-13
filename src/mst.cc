@@ -18,10 +18,10 @@ int main(int argc, char* argv[]) {
 	// depending on the command line arguments do the necessary operations
 	// random mode takes input of number of vertices and density of edges
 	if (strcmp(argv[1],"-r") == 0) {
-		clock_t start_simple;
+        clock_t start_simple;
         clock_t time_simple;
         clock_t start_fibo;
-       	clock_t time_fibo;
+        clock_t time_fibo;
         clock_t start_bino;
         clock_t time_bino;
 
